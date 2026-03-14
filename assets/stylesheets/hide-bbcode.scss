@@ -1,0 +1,51 @@
+.bbcode-hide-placeholder {
+  margin: 1em 0;
+  padding: 1em 1.5em;
+  border: 1px dashed var(--primary-low-mid);
+  border-radius: 8px;
+  background: var(--primary-very-low);
+  text-align: center;
+
+  .hide-placeholder-inner {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5em;
+    min-height: 44px;
+  }
+
+  .hide-lock-icon {
+    color: var(--primary-medium);
+    flex-shrink: 0;
+  }
+
+  .hide-placeholder-text {
+    color: var(--primary-medium);
+    font-size: 0.9em;
+    font-style: italic;
+  }
+}
+
+.bbcode-hide-revealed {
+  margin: 1em 0;
+  padding: 1em 1.5em;
+  border: 1px solid var(--primary-low);
+  border-radius: 8px;
+  background: var(--highlight-bg);
+  border-left: 3px solid var(--tertiary);
+}
+
+/* 移动端适配 */
+@media (max-width: 768px) {
+  .bbcode-hide-placeholder {
+    padding: 0.75em 1em;
+
+    .hide-placeholder-inner {
+      min-height: 44px;
+    }
+  }
+
+  .bbcode-hide-revealed {
+    padding: 0.75em 1em;
+  }
+}

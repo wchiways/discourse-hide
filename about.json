@@ -1,0 +1,8 @@
+{
+  "name": "discourse-hide",
+  "about": "Adds [hide]...[/hide] BBCode for reply-to-view content hiding",
+  "version": "0.1.0",
+  "authors": "chiway",
+  "url": "https://github.com/chiway/discourse-hide",
+  "minimum_discourse_version": "3.1.0"
+}

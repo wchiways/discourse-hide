@@ -1,0 +1,32 @@
+# Discourse plugin .gitignore
+
+# IDE & editor
+.idea/
+.vscode/
+*.swp
+*.swo
+*~
+
+# macOS
+.DS_Store
+
+# Serena (Language Server agent)
+.serena/
+
+# Claude Code
+.claude/
+
+# Node
+node_modules/
+
+# Ruby
+*.gem
+.bundle/
+vendor/bundle/
+
+# Logs
+*.log
+/log/
+
+# Temp files
+/tmp/
