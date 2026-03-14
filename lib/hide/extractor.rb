@@ -2,18 +2,20 @@
 
 module Hide
   class Extractor
-    HIDE_PATTERN = /\[hide\](.*?)\[\/hide\]/m
+    HIDE_RAW_PATTERN = /\[hide\].*?\[\/hide\]/m
 
-    def self.extract!(cooked, post)
+    def self.extract!(doc, post)
       hide_blocks = []
       index = 0
 
-      processed = cooked.gsub(HIDE_PATTERN) do |_match|
-        content = Regexp.last_match(1).strip
-        hide_blocks << content
-        placeholder = "<div class=\"bbcode-hide-placeholder\" data-hide-index=\"#{index}\"><p>回复后可见</p></div>"
+      doc.css("div.bbcode-hide-content").each do |node|
+        hide_blocks << node.inner_html.strip
+        placeholder = doc.document.create_element("div")
+        placeholder["class"] = "bbcode-hide-placeholder"
+        placeholder["data-hide-index"] = index.to_s
+        placeholder.inner_html = "<p>回复后可见</p>"
+        node.replace(placeholder)
         index += 1
-        placeholder
       end
 
       if hide_blocks.any?
@@ -23,8 +25,6 @@ module Hide
         post.custom_fields.delete("hide_blocks")
         post.save_custom_fields(true)
       end
-
-      processed
     end
   end
 end

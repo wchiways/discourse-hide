@@ -15,15 +15,21 @@ module Hide
 
       return cooked_html unless guardian.can_see_hide?(post)
 
-      processed = cooked_html.dup
-      hide_blocks.each_with_index do |content, index|
-        placeholder = "<div class=\"bbcode-hide-placeholder\" data-hide-index=\"#{index}\"><p>回复后可见</p></div>"
-        sanitized = PrettyText.sanitize(content)
-        revealed = "<div class=\"bbcode-hide-revealed\" data-hide-index=\"#{index}\">#{sanitized}</div>"
-        processed.gsub!(placeholder, revealed)
+      doc = Nokogiri::HTML::DocumentFragment.parse(cooked_html)
+
+      doc.css("div.bbcode-hide-placeholder").each do |node|
+        idx = node["data-hide-index"].to_i
+        content = hide_blocks[idx]
+        next unless content
+
+        revealed = doc.document.create_element("div")
+        revealed["class"] = "bbcode-hide-revealed"
+        revealed["data-hide-index"] = idx.to_s
+        revealed.inner_html = PrettyText.sanitize(content)
+        node.replace(revealed)
       end
 
-      processed
+      doc.to_html
     end
   end
 end

@@ -4,7 +4,7 @@
 # about: Adds [hide]...[/hide] BBCode for reply-to-view content hiding
 # version: 0.1.0
 # authors: chiway
-# url: https://github.com/chiway/discourse-hide
+# url: https://github.com/wchiways/discourse-hide
 
 enabled_site_setting :discourse_hide_enabled
 
@@ -23,16 +23,16 @@ after_initialize do
 
   on(:post_process_cooked) do |doc, post|
     next unless post.present?
-    cooked = doc.to_html
-    processed = Hide::Extractor.extract!(cooked, post)
-    if processed != cooked
-      doc.inner_html = Nokogiri::HTML::DocumentFragment.parse(processed).to_html
-    end
+    Hide::Extractor.extract!(doc, post)
   end
 
-  # Strip [hide]...[/hide] from raw text used in search indexing
+  # Strip hide blocks from search indexing (both HTML and raw BBCode)
   register_modifier(:search_index_text) do |text, _obj|
-    text&.gsub(Hide::Extractor::HIDE_PATTERN, "")
+    next text unless text
+    text = text.gsub(Hide::Extractor::HIDE_RAW_PATTERN, "")
+    fragment = Nokogiri::HTML::DocumentFragment.parse(text)
+    fragment.css("div.bbcode-hide-content, div.bbcode-hide-placeholder").each(&:remove)
+    fragment.to_html
   end
 
   add_to_serializer(:post, :cooked) do
